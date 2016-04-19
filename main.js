@@ -1,6 +1,7 @@
 var canvas;
 var context;
 var agent;
+var agent2;
 var positions = [];
 var imgGround = new Image();
 imgGround.src = "img/ground.png";
@@ -58,13 +59,17 @@ function init(){
 			
 		}	
 	}
-	window.addEventListener('keydown', function(event){}, false);
+	window.addEventListener('keydown', function(event){
+		agent.keydown(event.keyCode);
+		// agent2.keydown(event.keyCode);
+	}, false);
 	
 	positions[0].setSpaceProps(false);
 	positions[35].setSpaceProps(false);
 	positions[22].obj = {
-		name:"test",
-		draw: function(){
+		name:"water",
+			edible: true,
+			draw: function(){
 			var centerX = canvas.width / 2;
 			var centerY = canvas.height / 2;
 			var radius = 20;
@@ -76,24 +81,44 @@ function init(){
 			context.lineWidth = 5;
 			context.strokeStyle = '#003300';
 			context.stroke();
+			context.closePath();
 		}
 	}
 	positions[22].setSpaceProps(false);
 	positions[99].setSpaceProps(false);
 
 	agent = new Agent();
-	agent.keydown(event.keyCode);
-	agent.autoPilot = true;	
+	
+	agent.autoPilot = true;
+
+	agent2 = new Agent();
+	
+	agent2.autoPilot = true;	
 }
 
 window.onload = function(e){
 	init();
 	setInterval(function () {
-		context.save(); 
+		context.beginPath();
+	      context.rect(0, 0, 600, 650);
+	      context.fillStyle = 'black';
+	      context.fill();
+	      
+	      context.stroke();
+		
+		context.closePath();
+		
 
 		positions.forEach(function(pos){
 			pos.draw();
 		});
+
+		context.beginPath();
+		context.font = "20px Arial";
+		context.fillStyle = 'white';		
+		context.fillText("feeling: "+agent.feeling +" | energy: " + agent.energy + " | looking: " + agent.looking.name,10,640);		
+		context.closePath();
 		agent.run();
-	}, 500);
+		// agent2.run();
+	}, 100);
 }

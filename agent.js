@@ -19,20 +19,33 @@ var Agent = function(){
 	}
 	this.update = function(){
 		this.see();
+		if(this.energy < 400){
+			this.feeling = "hungry";
+		}
 		if(this.autoPilot){
 			this.randomWalk();
 		}
 	}
 	this.looking = {};
+	this.energy = 1000;
+	this.feeling = "ok";
+	this.think = function(){
+		if(this.feeling == "hungry"){
+
+		}
+	}
 	this.randomWalk = function(){
+
 		var dirNumber = Math.floor((Math.random() * 4));
-		var times = Math.floor((Math.random() * 3) + 1);
-		this.moveTo(dirs[dirNumber], 2);
+		var times = Math.floor((Math.random() * 9) + 1);
+		this.moveTo(dirs[dirNumber], times);
 
 	}
 	this.moveTo = function(dir, times){
+		
 		this.direction = dir;
 		while(times > 0){
+			if(this.energy < 1) break;
 			this.move(dir);
 			times--;
 		}
@@ -51,7 +64,7 @@ var Agent = function(){
 						this.looking = pos.obj.name != null? pos.obj : {name:"block"};					
 						break;
 					}else{
-						this.looking = "nothing";
+						this.looking = {name:"nothing"};
 					}
 					pos = positionValue(this.seeX, (this.seeY-=60));
 				}
@@ -64,7 +77,7 @@ var Agent = function(){
 						this.looking = pos.obj.name != null? pos.obj : {name:"block"};					
 						break;
 					}else{
-						this.looking = "nothing";
+						this.looking = {name:"nothing"};
 					}
 					pos = positionValue(this.seeX, (this.seeY+=60));
 				}
@@ -77,7 +90,7 @@ var Agent = function(){
 						this.looking = pos.obj.name != null? pos.obj : {name:"block"};					
 						break;
 					}else{
-						this.looking = "nothing";
+						this.looking = {name:"nothing"};
 					}
 					pos = positionValue(this.seeX-=60, (this.seeY));
 				}
@@ -90,7 +103,7 @@ var Agent = function(){
 						this.looking = pos.obj.name != null? pos.obj : {name:"block"};					
 						break;
 					}else{
-						this.looking = "nothing";
+						this.looking = {name:"nothing"};
 					}
 					pos = positionValue(this.seeX+=60, (this.seeY));
 				}
@@ -132,6 +145,7 @@ var Agent = function(){
 		}
 		// sleep(2000);
 		// setTimeout(function(){}, 2000);
+		this.energy--;
 	}
 	this.keydown = function(e){
 		switch (e) {
@@ -149,7 +163,7 @@ var Agent = function(){
 				this.direction = "Right";
 				break;
 			case 40:
-				this.move("Down");this.
+				this.move("Down");
 				this.direction = "Down";
 				break; 
 			default:
