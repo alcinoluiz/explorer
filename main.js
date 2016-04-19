@@ -59,7 +59,7 @@ function init(){
 		}	
 	}
 	window.addEventListener('keydown', function(event) {
-		agent.move(event.keyCode);		
+		agent.keydown(event.keyCode);		
 	}, false);	
 }
 

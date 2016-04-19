@@ -14,6 +14,13 @@ var Agent = function(){
 	this.rotate = function(){
 	}
 	this.looking = {};
+	this.moveTo = function(dir, times){
+		this.direction = dir;
+		while(times > 0){
+			this.move(dir);
+			times--;
+		}
+	}
 	
 	this.see = function(){
 		this.seeX = this.x;
@@ -82,39 +89,51 @@ var Agent = function(){
 		
 		context.drawImage(img, this.x, this.y, 59, 59);
 	}
-	this.move = function(e){
-		switch (e) {
-			case 37:
-				
-				if(this.x > 0 && this.direction == "Left" && positionValue(this.x-60, this.y).value == true){
-					
-					console.log("Left"+ " x:" + this.x + " - y:" + this.y );
-					this.x -= 60;
-				}
-				this.direction = "Left";
-				break; 
-			case 38:
+	this.move = function(dir){
+		switch(dir){
+			case "Up":
 				if(this.y > 0 && this.direction == "Up"  && positionValue(this.x, this.y-60).value){
-					
 					console.log("Up"+ " x:" + this.x + " - y:" + this.y );
 					this.y -= 60;
 				}
-				this.direction = "Up";
-				break; 
-			case 39:
-				if(this.x < 540 && this.direction == "Right" && positionValue(this.x+60, this.y).value == true){
-					
-					console.log("Right"+ " x:" + this.x + " - y:" + this.y );
-					this.x += 60;
-				}
-				this.direction = "Right";
-				break;
-			case 40:
+			break;
+			case "Down":
 				if(this.y < 540 && this.direction == "Down" && positionValue(this.x, this.y+60).value){
-					
 					console.log("Down"+ " x:" + this.x + " - y:" + this.y );
 					this.y += 60;
 				}
+			break;
+			case "Right":
+				if(this.x < 540 && this.direction == "Right" && positionValue(this.x+60, this.y).value == true){
+					console.log("Right"+ " x:" + this.x + " - y:" + this.y );
+					this.x += 60;
+				}
+			break;
+			case "Left":
+				if(this.x > 0 && this.direction == "Left" && positionValue(this.x-60, this.y).value == true){
+					console.log("Left"+ " x:" + this.x + " - y:" + this.y );
+					this.x -= 60;
+				}
+			break;
+		}
+	}
+	this.keydown = function(e){
+		switch (e) {
+			case 37:
+				
+				this.move("Left");
+				this.direction = "Left";
+				break; 
+			case 38:
+				this.move("Up");
+				this.direction = "Up";
+				break; 
+			case 39:
+				this.move("Right");
+				this.direction = "Right";
+				break;
+			case 40:
+				this.move("Down");this.
 				this.direction = "Down";
 				break; 
 			default:
