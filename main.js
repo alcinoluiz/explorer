@@ -3,9 +3,9 @@ var context;
 var agent;
 var positions = [];
 var imgGround = new Image();
-imgGround.src = "ground.png";
+imgGround.src = "img/ground.png";
 var imgGroundGray = new Image();
-imgGroundGray.src = "groundGray.png";
+imgGroundGray.src = "img/groundGray.png";
 
 var positionValue = function (px,py){
 	for(var i = 0; i<positions.length; i++){

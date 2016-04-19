@@ -1,4 +1,4 @@
-var src = "agent.png";
+var src = "img/agentLeft.png";
 var img = new Image();
 var ang = 0;
 img.src = src;
@@ -10,7 +10,7 @@ var Agent = function(){
 	this.seeY = 0;
 	this.direction = "Left";
 	this.img = new Image();
-	this.src = "agent"+this.direction+".png";
+	this.src = "img/agent"+this.direction+".png";
 	this.rotate = function(){
 	}
 	this.looking = {};
@@ -78,7 +78,7 @@ var Agent = function(){
 	}
 	this.draw = function(){
 		this.see();
-		img.src = "agent"+this.direction+".png";
+		img.src = "img/agent"+this.direction+".png";
 		
 		context.drawImage(img, this.x, this.y, 59, 59);
 	}
