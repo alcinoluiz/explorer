@@ -1,9 +1,11 @@
-var src = "img/agentLeft.png";
+var src = "img/bob.png";
 var img = new Image();
 var ang = 0;
+var dirs = ["Up", "Down", "Left", "Right"];
 img.src = src;
 
 var Agent = function(){
+	this.autoPilot = false;
 	this.x = 60*5;
 	this.y = 60*9;
 	this.seeX = 0;
@@ -11,9 +13,23 @@ var Agent = function(){
 	this.direction = "Left";
 	this.img = new Image();
 	this.src = "img/agent"+this.direction+".png";
-	this.rotate = function(){
+	this.run = function(){
+		this.update();
+		this.draw();
+	}
+	this.update = function(){
+		this.see();
+		if(this.autoPilot){
+			this.randomWalk();
+		}
 	}
 	this.looking = {};
+	this.randomWalk = function(){
+		var dirNumber = Math.floor((Math.random() * 4));
+		var times = Math.floor((Math.random() * 3) + 1);
+		this.moveTo(dirs[dirNumber], 2);
+
+	}
 	this.moveTo = function(dir, times){
 		this.direction = dir;
 		while(times > 0){
@@ -84,9 +100,7 @@ var Agent = function(){
 
 	}
 	this.draw = function(){
-		this.see();
-		img.src = "img/agent"+this.direction+".png";
-		
+		// img.src = "img/agent"+this.direction+".png";		
 		context.drawImage(img, this.x, this.y, 59, 59);
 	}
 	this.move = function(dir){
@@ -116,6 +130,8 @@ var Agent = function(){
 				}
 			break;
 		}
+		// sleep(2000);
+		// setTimeout(function(){}, 2000);
 	}
 	this.keydown = function(e){
 		switch (e) {

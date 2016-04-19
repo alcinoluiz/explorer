@@ -58,14 +58,8 @@ function init(){
 			
 		}	
 	}
-	window.addEventListener('keydown', function(event) {
-		agent.keydown(event.keyCode);		
-	}, false);	
-}
-
-window.onload = function(e){
-	init();
-
+	window.addEventListener('keydown', function(event){}, false);
+	
 	positions[0].setSpaceProps(false);
 	positions[35].setSpaceProps(false);
 	positions[22].obj = {
@@ -88,19 +82,18 @@ window.onload = function(e){
 	positions[99].setSpaceProps(false);
 
 	agent = new Agent();
+	agent.keydown(event.keyCode);
+	agent.autoPilot = true;	
+}
 
-
-	var ang = 0;
+window.onload = function(e){
+	init();
 	setInterval(function () {
-            context.save(); 
-            
-            	positions.forEach(function(pos){
+		context.save(); 
+
+		positions.forEach(function(pos){
 			pos.draw();
 		});
-            	agent.draw();
-        }, 30);	
-	
-	
-	
-
+		agent.run();
+	}, 500);
 }
