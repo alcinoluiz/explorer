@@ -4,9 +4,8 @@ var agent;
 var agent2;
 var positions = [];
 var imgGround = new Image();
-imgGround.src = "img/ground.png";
 var imgGroundGray = new Image();
-imgGroundGray.src = "img/groundGray.png";
+window.run = true;
 
 var positionValue = function (px,py){
 	for(var i = 0; i<positions.length; i++){
@@ -41,6 +40,8 @@ var Position = function(x,y){
 function init(){
 	canvas = document.getElementById('myCanvas');
 	context = canvas.getContext('2d');
+	imgGround.src = "img/ground.png";
+	imgGroundGray.src = "img/groundGray.png";
 	var space = 60;
 	for(var i = space; i < 600; i+=space){
 		context.beginPath();
@@ -66,16 +67,25 @@ function init(){
 	
 	positions[0].setSpaceProps(false);
 	positions[35].setSpaceProps(false);
-	positions[22].obj = {
+	positions[36].obj = {
 		name:"water",
-			edible: true,
-			draw: function(){
+		x : positions[36].x,
+		y: positions[36].y,
+		edible: true,
+		eat: function(agent){
+			agent.energy = 1000;
+			agent.lookingFor = "";
+		},
+		location : function(){
+			return [this.x, this.y];
+		},
+		draw: function(){
 			var centerX = canvas.width / 2;
 			var centerY = canvas.height / 2;
 			var radius = 20;
 
 			context.beginPath();
-			context.arc(positions[22].x+29, positions[22].y+29, radius, 0, 2 * Math.PI, false);
+			context.arc(this.x+29, this.y+29, radius, 0, 2 * Math.PI, false);
 			context.fillStyle = 'blue';
 			context.fill();
 			context.lineWidth = 5;
@@ -84,7 +94,36 @@ function init(){
 			context.closePath();
 		}
 	}
-	positions[22].setSpaceProps(false);
+
+	positions[63].obj = {
+		name:"water",
+		x : positions[63].x,
+		y: positions[63].y,
+		edible: true,
+		eat: function(agent){
+			agent.energy = 1000;
+			agent.lookingFor = "";
+		},
+		location : function(){
+			return [this.x, this.y];
+		},
+		draw: function(){
+			var centerX = canvas.width / 2;
+			var centerY = canvas.height / 2;
+			var radius = 20;
+
+			context.beginPath();
+			context.arc(this.x+29, this.y+29, radius, 0, 2 * Math.PI, false);
+			context.fillStyle = 'blue';
+			context.fill();
+			context.lineWidth = 5;
+			context.strokeStyle = '#003300';
+			context.stroke();
+			context.closePath();
+		}
+	}
+	positions[63].setSpaceProps(false);
+	positions[36].setSpaceProps(false);
 	positions[99].setSpaceProps(false);
 
 	agent = new Agent();
@@ -99,26 +138,31 @@ function init(){
 window.onload = function(e){
 	init();
 	setInterval(function () {
-		context.beginPath();
-	      context.rect(0, 0, 600, 650);
-	      context.fillStyle = 'black';
-	      context.fill();
-	      
-	      context.stroke();
-		
-		context.closePath();
-		
-
-		positions.forEach(function(pos){
-			pos.draw();
-		});
-
-		context.beginPath();
-		context.font = "20px Arial";
-		context.fillStyle = 'white';		
-		context.fillText("feeling: "+agent.feeling +" | energy: " + agent.energy + " | looking: " + agent.looking.name,10,640);		
-		context.closePath();
-		agent.run();
+		// if (window.run == true){
+			context.beginPath();
+		      context.rect(0, 0, 600, 650);
+		      context.fillStyle = 'black';
+		      context.fill();
+		      
+		      context.stroke();
+			
+			context.closePath();
+			
+	
+			positions.forEach(function(pos){
+				pos.draw();
+			});
+	
+			context.beginPath();
+			context.font = "20px Arial";
+			context.fillStyle = 'white';		
+			context.fillText("feeling: "+agent.feeling +" | energy: " + agent.energy + " | looking: " + agent.looking.name + " | lookingFor:" + agent.lookingFor,10,640);		
+			context.closePath();
+			agent.run();
+			agent2.run();
+		// }else{
+		// 	location.reload();
+		// }
 		// agent2.run();
-	}, 100);
+	}, 60);
 }

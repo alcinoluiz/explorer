@@ -2,7 +2,7 @@ var src = "img/bob.png";
 var img = new Image();
 var ang = 0;
 var dirs = ["Up", "Down", "Left", "Right"];
-img.src = src;
+
 
 var Agent = function(){
 	this.autoPilot = false;
@@ -12,27 +12,87 @@ var Agent = function(){
 	this.seeY = 0;
 	this.direction = "Left";
 	this.img = new Image();
-	this.src = "img/agent"+this.direction+".png";
+	this.img.src = "img/bob.png";
+	this.seeX = this.x;
+	this.seeY = this.y;
+	this.img.src = this.src;
+	this.width = this.img.width;
+	this.height = this.img.height;
+	this.looking = {};
+	this.energy = 1000;
+	this.feeling = "ok";
+	this.lookingFor = "";
+	this.goalFound = false;
+	this.goalCloser = false;
+
+	this.sense = function(){
+		this.see();
+		if(this.energy < 950){
+			this.feeling = "thirsty";
+		}
+	}
+	this.reasoning = function(){
+		if (this.feeling == "thirsty"){
+			this.lookingFor = "water";
+		}
+
+		if (this.looking.name == this.lookingFor) {
+			this.goalFound = true;
+			console.log('goal found!');
+		}
+
+		if (this.goalFound == true) {
+			if (this.goalDistance == 0) {
+				this.goalCloser = true;	
+			}
+		}
+	}
+
+	this.goalDistance = function(){
+		var a = this.x - (this.looking.location())[0];
+		var b = this.y - (this.looking.location())[1];
+
+		var c = Math.sqrt( a*a + b*b );
+		return (c/60)-1;
+	}
+
+	this.acting = function(){
+		if(this.lookingFor != "" && this.goalFound == false){
+			this.randomWalk();
+		}
+		if (this.goalFound == true) {
+			console.log(this.looking.location());
+			this.moveToGoal();
+		}
+		if(this.goalCloser == true){
+			console.log("Goal closer")
+			this.looking.eat(this);
+			console.log("Ate")
+		}
+	}
 	this.run = function(){
-		this.update();
+		this.sense();
+		this.reasoning();
+		this.acting();
+		this.energy--;
 		this.draw();
 	}
 	this.update = function(){
 		this.see();
-		if(this.energy < 400){
-			this.feeling = "hungry";
-		}
+		if (this.energy > 999) {this.feeling = "ok";}
+		if(this.energy < 400){this.feeling = "hungry";	}
 		if(this.autoPilot){
 			this.randomWalk();
 		}
 	}
-	this.looking = {};
-	this.energy = 1000;
-	this.feeling = "ok";
-	this.think = function(){
-		if(this.feeling == "hungry"){
+	this.moveToGoal = function(){
+		var moves = this.goalDistance();
 
-		}
+
+		console.log("distance: " + moves);
+		moveTo(this.direction, moves);
+		
+		
 	}
 	this.randomWalk = function(){
 
@@ -42,7 +102,7 @@ var Agent = function(){
 
 	}
 	this.moveTo = function(dir, times){
-		
+		console.log("moving to: " + dir + " " + times +" times");
 		this.direction = dir;
 		while(times > 0){
 			if(this.energy < 1) break;
@@ -113,8 +173,7 @@ var Agent = function(){
 
 	}
 	this.draw = function(){
-		// img.src = "img/agent"+this.direction+".png";		
-		context.drawImage(img, this.x, this.y, 59, 59);
+		context.drawImage(this.img, this.x, this.y, 59, 59);
 	}
 	this.move = function(dir){
 		switch(dir){
@@ -149,8 +208,7 @@ var Agent = function(){
 	}
 	this.keydown = function(e){
 		switch (e) {
-			case 37:
-				
+			case 37:				
 				this.move("Left");
 				this.direction = "Left";
 				break; 
@@ -170,10 +228,6 @@ var Agent = function(){
 				console.log(e); 
 		}
 	}
-	this.seeX = this.x;
-	this.seeY = this.y;
-	this.img.src = this.src;
-	this.width = this.img.width;
-	this.height = this.img.height;
+	img.src = src;	
 	console.log("Agent is ready.");	
 }
