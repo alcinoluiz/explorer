@@ -26,12 +26,15 @@ var Agent = function(){
 	this.sense = function(){
 		this.see();
 		// this.goalDistance = this.
-		if(this.energy < 600){
+		if(this.energy < 950){
 			this.feeling = "thirsty";
 		}
 	}
 	this.reasoning = function(){
+
 		if (this.feeling == "thirsty"){this.lookingFor = "water";}
+
+		console.log(this.memories.loadMemory(this.lookingFor) == null? "no memories" : this.memories.loadMemory(this.lookingFor));
 
 		if (this.looking.name == this.lookingFor) {
 			console.log('goal found!');
@@ -58,6 +61,7 @@ var Agent = function(){
 			console.log("Goal closer")
 			this.looking.eat(this);
 			console.log("Ate");
+			this.memories.writeMemory(this.looking.name, this.looking);
 			this.goalReach = true;			
 		}
 	}
@@ -228,5 +232,22 @@ var Agent = function(){
 				console.log(e); 
 		}
 	}
+
+	this.memories = {
+		checkMemories: function(){
+				if (typeof(Storage) !== "undefined") {
+				console.log("Memories are ready");
+			}else{
+				console.log("No memories");
+			}
+		},
+		writeMemory: function(name, obj){
+			localStorage.setItem(name,JSON.stringify(obj));
+		},
+		loadMemory: function(name){
+			return JSON.parse(localStorage.getItem(name));
+		}		
+	}
+	this.memories.checkMemories();
 	console.log("Agent is ready.");	
 }

@@ -100,11 +100,11 @@ function init(){
 	positions[0].setSpaceProps(false);
 	positions[35].setSpaceProps(false);
 	positions[36].obj = createObj(36);
-	
-
-	positions[60].obj = createObj(60);
-	positions[60].setSpaceProps(false);
 	positions[36].setSpaceProps(false);
+
+	positions[46].setSpaceProps(false);
+	// positions[60].obj = createObj(60);
+	// positions[60].setSpaceProps(false);	
 	positions[99].setSpaceProps(false);
 
 	agent = new Agent();
