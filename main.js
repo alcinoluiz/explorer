@@ -37,6 +37,38 @@ var Position = function(x,y){
 	console.log("Position created");
 }
 
+function createObj(positionIndex){
+	var obj = new Object();
+	obj = {
+		name:"water",
+		x : positions[positionIndex].x,
+		y: positions[positionIndex].y,
+		edible: true,
+		eat: function(agent){
+			agent.energy = 1000;
+			agent.lookingFor = "";
+		},
+		location : function(){
+			return [this.x, this.y];
+		},
+		draw: function(){
+			var centerX = canvas.width / 2;
+			var centerY = canvas.height / 2;
+			var radius = 20;
+
+			context.beginPath();
+			context.arc(this.x+29, this.y+29, radius, 0, 2 * Math.PI, false);
+			context.fillStyle = 'blue';
+			context.fill();
+			context.lineWidth = 5;
+			context.strokeStyle = '#003300';
+			context.stroke();
+			context.closePath();
+		}
+	}
+	return obj;
+}
+
 function init(){
 	canvas = document.getElementById('myCanvas');
 	context = canvas.getContext('2d');
@@ -67,62 +99,11 @@ function init(){
 	
 	positions[0].setSpaceProps(false);
 	positions[35].setSpaceProps(false);
-	positions[36].obj = {
-		name:"water",
-		x : positions[36].x,
-		y: positions[36].y,
-		edible: true,
-		eat: function(agent){
-			agent.energy = 1000;
-			agent.lookingFor = "";
-		},
-		location : function(){
-			return [this.x, this.y];
-		},
-		draw: function(){
-			var centerX = canvas.width / 2;
-			var centerY = canvas.height / 2;
-			var radius = 20;
+	positions[36].obj = createObj(36);
+	
 
-			context.beginPath();
-			context.arc(this.x+29, this.y+29, radius, 0, 2 * Math.PI, false);
-			context.fillStyle = 'blue';
-			context.fill();
-			context.lineWidth = 5;
-			context.strokeStyle = '#003300';
-			context.stroke();
-			context.closePath();
-		}
-	}
-
-	positions[63].obj = {
-		name:"water",
-		x : positions[63].x,
-		y: positions[63].y,
-		edible: true,
-		eat: function(agent){
-			agent.energy = 1000;
-			agent.lookingFor = "";
-		},
-		location : function(){
-			return [this.x, this.y];
-		},
-		draw: function(){
-			var centerX = canvas.width / 2;
-			var centerY = canvas.height / 2;
-			var radius = 20;
-
-			context.beginPath();
-			context.arc(this.x+29, this.y+29, radius, 0, 2 * Math.PI, false);
-			context.fillStyle = 'blue';
-			context.fill();
-			context.lineWidth = 5;
-			context.strokeStyle = '#003300';
-			context.stroke();
-			context.closePath();
-		}
-	}
-	positions[63].setSpaceProps(false);
+	positions[60].obj = createObj(60);
+	positions[60].setSpaceProps(false);
 	positions[36].setSpaceProps(false);
 	positions[99].setSpaceProps(false);
 
@@ -133,8 +114,8 @@ function init(){
 	agent2 = new Agent();
 	
 	agent2.autoPilot = true;	
-}
 
+}
 window.onload = function(e){
 	init();
 	setInterval(function () {
@@ -159,7 +140,7 @@ window.onload = function(e){
 			context.fillText("feeling: "+agent.feeling +" | energy: " + agent.energy + " | looking: " + agent.looking.name + " | lookingFor:" + agent.lookingFor,10,640);		
 			context.closePath();
 			agent.run();
-			agent2.run();
+			// agent2.run();
 		// }else{
 		// 	location.reload();
 		// }

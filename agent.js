@@ -1,16 +1,12 @@
-var src = "img/bob.png";
 var img = new Image();
-var ang = 0;
-var dirs = ["Up", "Down", "Left", "Right"];
-
-
+img.src = "img/bob.png";
 var Agent = function(){
 	this.autoPilot = false;
 	this.x = 60*5;
 	this.y = 60*9;
 	this.seeX = 0;
 	this.seeY = 0;
-	this.direction = "Left";
+	this.direction = "Up";
 	this.img = new Image();
 	this.img.src = "img/bob.png";
 	this.seeX = this.x;
@@ -24,51 +20,53 @@ var Agent = function(){
 	this.lookingFor = "";
 	this.goalFound = false;
 	this.goalCloser = false;
+	this.goalReach = false;
+	this.dirs = ["Up", "Down", "Left", "Right"];
 
 	this.sense = function(){
 		this.see();
-		if(this.energy < 950){
+		// this.goalDistance = this.
+		if(this.energy < 600){
 			this.feeling = "thirsty";
 		}
 	}
 	this.reasoning = function(){
-		if (this.feeling == "thirsty"){
-			this.lookingFor = "water";
-		}
+		if (this.feeling == "thirsty"){this.lookingFor = "water";}
 
 		if (this.looking.name == this.lookingFor) {
-			this.goalFound = true;
 			console.log('goal found!');
+			this.goalFound = true;
 		}
 
 		if (this.goalFound == true) {
-			if (this.goalDistance == 0) {
-				this.goalCloser = true;	
-			}
+			if (this.goalDistance() == 0) {this.goalCloser = true;}
+		}
+
+		if(this.goalReach){
+			this.reset();
 		}
 	}
-
-	this.goalDistance = function(){
-		var a = this.x - (this.looking.location())[0];
-		var b = this.y - (this.looking.location())[1];
-
-		var c = Math.sqrt( a*a + b*b );
-		return (c/60)-1;
-	}
-
 	this.acting = function(){
 		if(this.lookingFor != "" && this.goalFound == false){
 			this.randomWalk();
 		}
-		if (this.goalFound == true) {
-			console.log(this.looking.location());
+		if (this.goalFound == true && !this.goalCloser) {
+			console.log("moving to: " + this.looking.location());
 			this.moveToGoal();
 		}
 		if(this.goalCloser == true){
 			console.log("Goal closer")
 			this.looking.eat(this);
-			console.log("Ate")
+			console.log("Ate");
+			this.goalReach = true;			
 		}
+	}
+	this.reset = function(){
+		this.feeling = "ok";
+		this.lookingFor = "";
+		this.goalFound = false;
+		this.goalCloser = false;
+		this.goalReach = false;
 	}
 	this.run = function(){
 		this.sense();
@@ -85,20 +83,22 @@ var Agent = function(){
 			this.randomWalk();
 		}
 	}
+	this.goalDistance = function(){
+		var a = this.x - (this.looking.location())[0];
+		var b = this.y - (this.looking.location())[1];
+
+		var c = Math.sqrt( a*a + b*b );
+		return (c/60)-1;
+	}
 	this.moveToGoal = function(){
 		var moves = this.goalDistance();
-
-
 		console.log("distance: " + moves);
-		moveTo(this.direction, moves);
-		
-		
+		this.moveTo(this.direction, moves);		
 	}
 	this.randomWalk = function(){
-
 		var dirNumber = Math.floor((Math.random() * 4));
 		var times = Math.floor((Math.random() * 9) + 1);
-		this.moveTo(dirs[dirNumber], times);
+		this.moveTo(this.dirs[dirNumber], times);
 
 	}
 	this.moveTo = function(dir, times){
@@ -173,31 +173,31 @@ var Agent = function(){
 
 	}
 	this.draw = function(){
-		context.drawImage(this.img, this.x, this.y, 59, 59);
+		context.drawImage(img, this.x, this.y, 59, 59);
 	}
 	this.move = function(dir){
 		switch(dir){
 			case "Up":
 				if(this.y > 0 && this.direction == "Up"  && positionValue(this.x, this.y-60).value){
-					console.log("Up"+ " x:" + this.x + " - y:" + this.y );
+					// console.log("Up"+ " x:" + this.x + " - y:" + this.y );
 					this.y -= 60;
 				}
 			break;
 			case "Down":
 				if(this.y < 540 && this.direction == "Down" && positionValue(this.x, this.y+60).value){
-					console.log("Down"+ " x:" + this.x + " - y:" + this.y );
+					// console.log("Down"+ " x:" + this.x + " - y:" + this.y );
 					this.y += 60;
 				}
 			break;
 			case "Right":
 				if(this.x < 540 && this.direction == "Right" && positionValue(this.x+60, this.y).value == true){
-					console.log("Right"+ " x:" + this.x + " - y:" + this.y );
+					// console.log("Right"+ " x:" + this.x + " - y:" + this.y );
 					this.x += 60;
 				}
 			break;
 			case "Left":
 				if(this.x > 0 && this.direction == "Left" && positionValue(this.x-60, this.y).value == true){
-					console.log("Left"+ " x:" + this.x + " - y:" + this.y );
+					// console.log("Left"+ " x:" + this.x + " - y:" + this.y );
 					this.x -= 60;
 				}
 			break;
@@ -228,6 +228,5 @@ var Agent = function(){
 				console.log(e); 
 		}
 	}
-	img.src = src;	
 	console.log("Agent is ready.");	
 }
